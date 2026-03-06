@@ -21,7 +21,7 @@ struct AboutView: View {
             Divider()
                 .padding(.horizontal, 40)
 
-            Link("GitHub", destination: URL(string: "https://github.com/musicmi/solai")!)
+            Link("GitHub", destination: URL(string: "https://github.com/adroual/solai")!)
                 .font(.caption)
         }
         .padding(24)
