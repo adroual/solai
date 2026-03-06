@@ -70,6 +70,9 @@ final class SessionManager: ObservableObject {
                 projectPath = meta["project"] as? String
                 projectName = projectPath.map { URL(fileURLWithPath: $0).lastPathComponent }
                 pid = meta["pid"] as? Int
+            } else {
+                // No meta file — likely a subprocess, not a real session. Skip it.
+                continue
             }
 
             newSessions.append(Session(

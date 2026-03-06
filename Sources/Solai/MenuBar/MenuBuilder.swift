@@ -99,30 +99,8 @@ final class MenuBuilder: NSObject, NSMenuDelegate {
     }
 
     private func focusGhosttyWindow(for session: Session) {
-        let projectName = session.projectName ?? ""
-        let projectPath = session.projectPath ?? ""
-
-        let script = """
-        tell application "Ghostty"
-            activate
-            set matched to false
-            try
-                set winList to every window
-                repeat with w in winList
-                    set winName to name of w
-                    if winName contains "\(projectName)" or winName contains "\(projectPath)" then
-                        set index of w to 1
-                        set matched to true
-                        exit repeat
-                    end if
-                end repeat
-            end try
-        end tell
-        """
-
-        if let appleScript = NSAppleScript(source: script) {
-            var error: NSDictionary?
-            appleScript.executeAndReturnError(&error)
+        if let ghosttyURL = NSWorkspace.shared.urlForApplication(withBundleIdentifier: "com.mitchellh.ghostty") {
+            NSWorkspace.shared.openApplication(at: ghosttyURL, configuration: .init())
         }
     }
 

@@ -9,6 +9,8 @@ CONTENTS="$APP_BUNDLE/Contents"
 MACOS="$CONTENTS/MacOS"
 RESOURCES="$CONTENTS/Resources"
 
+SIGN_IDENTITY="Developer ID Application: Alexandre Droual (2FHSYNGW44)"
+
 echo "Building $APP_NAME..."
 
 # Build release binary
@@ -29,8 +31,13 @@ cp "$PROJECT_DIR/Info.plist" "$CONTENTS/Info.plist"
 cp "$PROJECT_DIR/Sources/Solai/Hooks/solai_hook.sh" "$RESOURCES/solai_hook.sh"
 chmod 755 "$RESOURCES/solai_hook.sh"
 
-# Sign (ad-hoc for local use)
-codesign --force --sign - --entitlements "$PROJECT_DIR/Solai.entitlements" "$APP_BUNDLE" 2>&1 || true
+# Sign with Developer ID
+echo "Signing with: $SIGN_IDENTITY"
+codesign --force --options runtime \
+    --sign "$SIGN_IDENTITY" \
+    --entitlements "$PROJECT_DIR/Solai.entitlements" \
+    --timestamp \
+    "$APP_BUNDLE" 2>&1
 
 echo ""
 echo "Built: $APP_BUNDLE"

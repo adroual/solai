@@ -7,6 +7,10 @@ APP_BUNDLE="$BUILD_DIR/Solai.app"
 DMG_DIR="$BUILD_DIR/dmg"
 DMG_PATH="$BUILD_DIR/Solai.dmg"
 
+SIGN_IDENTITY="Developer ID Application: Alexandre Droual (2FHSYNGW44)"
+TEAM_ID="2FHSYNGW44"
+BUNDLE_ID="com.musicmi.solai"
+
 # Build app first
 "$PROJECT_DIR/scripts/build-app.sh"
 
@@ -15,6 +19,7 @@ if [ ! -d "$APP_BUNDLE" ]; then
     exit 1
 fi
 
+echo ""
 echo "Creating DMG..."
 
 # Prepare DMG staging
@@ -33,5 +38,21 @@ hdiutil create -volname "Solai" \
 
 rm -rf "$DMG_DIR"
 
+# Sign DMG
+echo "Signing DMG..."
+codesign --force --sign "$SIGN_IDENTITY" --timestamp "$DMG_PATH" 2>&1
+
+# Notarize
 echo ""
-echo "DMG created: $DMG_PATH"
+echo "Submitting for notarization..."
+xcrun notarytool submit "$DMG_PATH" \
+    --team-id "$TEAM_ID" \
+    --keychain-profile "notarytool" \
+    --wait 2>&1
+
+# Staple the ticket
+echo "Stapling notarization ticket..."
+xcrun stapler staple "$DMG_PATH" 2>&1
+
+echo ""
+echo "Done! Notarized DMG: $DMG_PATH"
