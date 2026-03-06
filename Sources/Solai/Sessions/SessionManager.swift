@@ -75,6 +75,14 @@ final class SessionManager: ObservableObject {
                 continue
             }
 
+            // Check if the process is still alive
+            if let pid = pid, kill(Int32(pid), 0) != 0 {
+                // Process is dead — clean up files
+                try? fm.removeItem(atPath: statePath)
+                try? fm.removeItem(atPath: metaPath)
+                continue
+            }
+
             newSessions.append(Session(
                 id: sessionID,
                 state: state,

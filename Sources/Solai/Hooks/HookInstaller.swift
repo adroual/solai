@@ -71,6 +71,9 @@ struct HookInstaller {
         if event == "SessionStart" {
             return "echo \(state) > /tmp/solai_state_$PPID; printf '{\"project\":\"%s\",\"pid\":%d}' \"$(pwd)\" $PPID > /tmp/solai_meta_$PPID #solai"
         }
+        if event == "SessionEnd" {
+            return "rm -f /tmp/solai_state_$PPID /tmp/solai_meta_$PPID #solai"
+        }
         return "echo \(state) > /tmp/solai_state_$PPID #solai"
     }
 
