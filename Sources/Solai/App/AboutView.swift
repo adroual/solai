@@ -14,7 +14,7 @@ struct AboutView: View {
                 .font(.subheadline)
                 .foregroundStyle(.secondary)
 
-            Text("v1.0.0")
+            Text("v1.0.1")
                 .font(.caption)
                 .foregroundStyle(.tertiary)
 
